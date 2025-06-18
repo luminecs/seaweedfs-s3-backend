@@ -21,7 +21,7 @@ public class S3Service {
 
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
-    private final Duration presignDuration = Duration.ofSeconds(900);
+    private final Duration presignDuration = Duration.ofSeconds(10);
 
     public S3Service(S3Client s3Client, S3Presigner s3Presigner) {
         this.s3Client = s3Client;
