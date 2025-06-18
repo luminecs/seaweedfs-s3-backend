@@ -28,10 +28,22 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails user = users.get(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found with username: " + username);
+        if (!users.containsKey(username)) {
+            throw new UsernameNotFoundException("User not found: " + username);
         }
-        return user;
+
+        UserDetails originalUser = users.get(username);
+
+        // --- 核心修正：返回一个原始 user 的副本 ---
+        // 这样 Spring Security 对副本的修改就不会影响我们存储的原始数据
+        return new User(
+                originalUser.getUsername(),
+                originalUser.getPassword(),
+                originalUser.isEnabled(),
+                originalUser.isAccountNonExpired(),
+                originalUser.isCredentialsNonExpired(),
+                originalUser.isAccountNonLocked(),
+                originalUser.getAuthorities()
+        );
     }
 }
