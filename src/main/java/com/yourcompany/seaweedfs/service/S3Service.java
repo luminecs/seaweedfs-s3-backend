@@ -136,4 +136,22 @@ public class S3Service {
                 .build();
         s3Client.abortMultipartUpload(abortRequest);
     }
+
+    public List<PartDto> listParts(String bucketName, String key, String uploadId) {
+        List<Part> sdkParts = listPartsInternal(bucketName, key, uploadId);
+        return sdkParts.stream()
+                .map(part -> new PartDto(part.partNumber(), part.eTag(), part.size()))
+                .collect(Collectors.toList());
+    }
+
+    // 新增一个方法来给 listParts 调用
+    public List<Part> listPartsInternal(String bucketName, String key, String uploadId) {
+        ListPartsRequest request = ListPartsRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .uploadId(uploadId)
+                .build();
+        ListPartsResponse response = s3Client.listParts(request);
+        return response.parts();
+    }
 }

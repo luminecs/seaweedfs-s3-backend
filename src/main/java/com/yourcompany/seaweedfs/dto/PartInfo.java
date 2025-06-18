@@ -1,4 +1,9 @@
 package com.yourcompany.seaweedfs.dto;
 
-public record PartInfo(int PartNumber, String ETag) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record PartInfo(@JsonProperty("PartNumber") int PartNumber,
+                       @JsonProperty("ETag") String ETag
+) {
+}
 

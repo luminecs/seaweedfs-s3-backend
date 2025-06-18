@@ -4,6 +4,7 @@ import com.yourcompany.seaweedfs.dto.*;
 import com.yourcompany.seaweedfs.service.S3Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.services.s3.model.Part;
 import software.amazon.awssdk.services.s3.model.S3Object;
 
 import java.util.List;
@@ -62,5 +63,10 @@ public class S3Controller {
     public ResponseEntity<Void> abortMultipart(@RequestBody AbortMultipartRequest request) {
         s3Service.abortMultipartUpload(request.bucketName(), request.key(), request.uploadId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/list-parts")
+    public List<PartDto> listParts(@RequestParam String bucketName, @RequestParam String key, @RequestParam String uploadId) {
+        return s3Service.listParts(bucketName, key, uploadId);
     }
 }
